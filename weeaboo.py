@@ -123,8 +123,8 @@ def CHECK_CONFIG(config_name: str) -> None:
             SETUP_CONFIG(config_name)
             LOAD_CONFIG(config_name)
     else:
-        SETUP_CONFIG()
-        LOAD_CONFIG()
+        SETUP_CONFIG(config_name)
+        LOAD_CONFIG(config_name)
 
 def SLEEP(timing: float | int) -> None:
     """
