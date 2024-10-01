@@ -82,7 +82,7 @@ def SETUP_CMD_FONTS(font_name: str) -> None:
     handle = windll.kernel32.GetStdHandle(STD_OUTPUT_HANDLE)
     windll.kernel32.SetCurrentConsoleFontEx(handle, c_long(False), pointer(font))
 
-def SETUP_CONFIG() -> None:
+def SETUP_CONFIG(config_name: str) -> None:
     """
     Create config file
     """
@@ -92,10 +92,10 @@ def SETUP_CONFIG() -> None:
     config.set('Settings', 'CIRCLE_MULTIPLIER', "2")
     config.set('Settings', 'BH_MOUSE4_DELAY', "0.01")
     config.set('Settings', 'SG_MOUSE5_DELAY', "0.003")
-    with open('config.ini', 'w') as config_file:
+    with open(config_name, 'w') as config_file:
         config.write(config_file)
 
-def LOAD_CONFIG() -> None:
+def LOAD_CONFIG(config_name: str) -> None:
     """
     Load config file and set variables
     """
@@ -117,11 +117,11 @@ def CHECK_CONFIG(config_name: str) -> None:
     """
     if isfile(config_name):
         try:
-            LOAD_CONFIG()
+            LOAD_CONFIG(config_name)
         except:
             remove(config_name)
-            SETUP_CONFIG()
-            LOAD_CONFIG()
+            SETUP_CONFIG(config_name)
+            LOAD_CONFIG(config_name)
     else:
         SETUP_CONFIG()
         LOAD_CONFIG()
