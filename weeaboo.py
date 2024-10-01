@@ -102,7 +102,7 @@ def LOAD_CONFIG(config_name: str) -> None:
     global CIRCLE_DELAY, CIRCLE_MULTIPLIER, BH_MOUSE4_DELAY, SG_MOUSE5_DELAY, A_ITERATIONS, B_ITERATIONS
 
     config = configparser.ConfigParser()
-    config.read('config.ini')
+    config.read(config_name)
     CIRCLE_DELAY = config.getfloat('Settings', 'CIRCLE_DELAY')
     CIRCLE_MULTIPLIER = config.getint('Settings', 'CIRCLE_MULTIPLIER')
     BH_MOUSE4_DELAY = config.getfloat('Settings', 'BH_MOUSE4_DELAY')
