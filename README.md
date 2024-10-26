@@ -1,4 +1,4 @@
-# WEEABOO v5.0.0
+# WEEABOO v5.0.1
 
 ### WEEABOO exploitation script for game
 \
@@ -11,7 +11,7 @@
 ![](weeaboo.gif)
 
 ```
-Python 3.12.6 (other versions not tested)
+Python 3.12.6+ (other versions not tested)
 python -m pip install -r requirements.txt
 
 OR
@@ -21,12 +21,5 @@ pip install keyboard
 ```
 
 
-## Changelog v5.0.0
-
-[+] Changed project name to WEEABOO\
-\
-[+] Added config.ini file where u can configure script\
-[+] Added automatic loading of missing libraries\
-[+] Added a welcome message with a beautiful anime girl UwU\
-[+] Added lines of code for changing the font in CMD\
-[+] Added randomization of timings if you use circle_delay = 0
+## Changelog v5.0.1
+[+] Added new 11 ascii pictures\
