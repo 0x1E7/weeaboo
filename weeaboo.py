@@ -1,5 +1,5 @@
 from typing import Final
-VERSION: Final = "5.0.0"
+VERSION: Final = "5.0.1"
 
 from ctypes import windll, c_long, pointer, sizeof, c_ulong, c_uint, c_wchar, c_short, Structure
 from time import sleep
@@ -13,9 +13,13 @@ try:
     from win32api import mouse_event, GetKeyState
 except ModuleNotFoundError:
     print("Module not found error, trying to install from pip...")
-    system("python -m pip install -r requirements.txt")
-    system("cls")
-    _ = input("The modules are installed, run the program again\n\nPress any key to close this window...")
+    try:
+        system("python -m pip install -r requirements.txt")
+        system("cls")
+        _ = input("The modules are installed, run the program again\n\nPress any key to close this window...")
+    except:
+        system("cls")
+        _ = input("Can't install modules. Are you add python in path?\nTry in cmd:\n'pip install pywin32'\n'pip install keyboard'\n\nOr reinstall python and check mark 'add python to path'")
     exit()
 
 from PICTURES import *
@@ -145,16 +149,24 @@ def MAIN() -> None:
     while True:
         if GetKeyState(0x01) < 0 and GetKeyState(0x02) < 0:
                 MOVE_MOUSE((1, 0), (1, 1))
+                # press("a")
+                # release("a")
                 SLEEP(CIRCLE_DELAY)
                 
                 MOVE_MOUSE((0, 1), (-1, 1))
+                # press("d")
+                # release("d")
                 SLEEP(CIRCLE_DELAY)
                 
-                MOVE_MOUSE((-1, 0), (-1, -1)) 
+                MOVE_MOUSE((-1, 0), (-1, -1))
+                # press("a")
+                # release("a")
                 SLEEP(CIRCLE_DELAY)
                     
                 MOVE_MOUSE((0, -1), (1, -1))
                 SLEEP(CIRCLE_DELAY)
+                # press("d")
+                # release("d")
         
         elif GetKeyState(0x06) < 0:
             press('spacebar')
