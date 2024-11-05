@@ -1,4 +1,4 @@
-# WEEABOO v5.0.1
+# WEEABOO v5.0.2
 
 ### WEEABOO exploitation script for game
 \
@@ -21,5 +21,5 @@ pip install keyboard
 ```
 
 
-## Changelog v5.0.1
-[+] Added new 11 ascii pictures\
+## Changelog v5.0.2
+[+] Some fixes
