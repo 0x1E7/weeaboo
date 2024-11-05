@@ -1,5 +1,5 @@
 from typing import Final
-VERSION: Final = "5.0.1"
+VERSION: Final = "5.0.2"
 
 from ctypes import windll, c_long, pointer, sizeof, c_ulong, c_uint, c_wchar, c_short, Structure
 from time import sleep
@@ -16,7 +16,7 @@ except ModuleNotFoundError:
     try:
         system("python -m pip install -r requirements.txt")
         system("cls")
-        _ = input("The modules are installed, run the program again\n\nPress any key to close this window...")
+        _ = input("Press any key to close, this window...")
     except:
         system("cls")
         _ = input("Can't install modules. Are you add python in path?\nTry in cmd:\n'pip install pywin32'\n'pip install keyboard'\n\nOr reinstall python and check mark 'add python to path'")
@@ -140,47 +140,38 @@ def MAIN() -> None:
         SLEEP
         etc..
 
-    elif mouse4 pressed:
+    if mouse4 pressed:
         spam spacebar
 
-    elif mouse5 pressed:
+    if mouse5 pressed:
         spam spacebar + ctrl
     """
     while True:
         if GetKeyState(0x01) < 0 and GetKeyState(0x02) < 0:
                 MOVE_MOUSE((1, 0), (1, 1))
-                # press("a")
-                # release("a")
                 SLEEP(CIRCLE_DELAY)
                 
                 MOVE_MOUSE((0, 1), (-1, 1))
-                # press("d")
-                # release("d")
                 SLEEP(CIRCLE_DELAY)
                 
                 MOVE_MOUSE((-1, 0), (-1, -1))
-                # press("a")
-                # release("a")
                 SLEEP(CIRCLE_DELAY)
                     
                 MOVE_MOUSE((0, -1), (1, -1))
                 SLEEP(CIRCLE_DELAY)
-                # press("d")
-                # release("d")
         
-        elif GetKeyState(0x06) < 0:
+        if GetKeyState(0x06) < 0:
             press('spacebar')
             release('spacebar')
             SLEEP(BH_MOUSE4_DELAY)
         
-        elif GetKeyState(0x05) < 0:
+        if GetKeyState(0x05) < 0:
             press('spacebar')
             SLEEP(SG_MOUSE5_DELAY)
             press('ctrl')
             release('spacebar')
             release('ctrl')
-        else:
-            continue
+
             
 if __name__ == "__main__":
     #Entry point
