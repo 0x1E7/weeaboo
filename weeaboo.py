@@ -1,5 +1,6 @@
 from typing import Final
-VERSION: Final = "5.0.2"
+VERSION: Final = "5.0.3"
+# CPU load fix.
 
 from ctypes import windll, c_long, pointer, sizeof, c_ulong, c_uint, c_wchar, c_short, Structure
 from time import sleep
@@ -72,7 +73,8 @@ def SETUP_CONFIG(config_name: str) -> None:
     config.set('Settings', 'CIRCLE_DELAY', "0")
     config.set('Settings', 'CIRCLE_MULTIPLIER', "2")
     config.set('Settings', 'BH_MOUSE4_DELAY', "0.01")
-    config.set('Settings', 'SG_MOUSE5_DELAY', "0.003")
+    config.set('Settings', 'SG_MOUSE5_DELAY', "0.004")
+    config.set('Settings', 'KEYPRESS_DETECT', "0.1")
     with open(config_name, 'w') as config_file:
         config.write(config_file)
 
@@ -80,7 +82,7 @@ def LOAD_CONFIG(config_name: str) -> None:
     """
     Load config file and set variables
     """
-    global CIRCLE_DELAY, CIRCLE_MULTIPLIER, BH_MOUSE4_DELAY, SG_MOUSE5_DELAY, A_ITERATIONS, B_ITERATIONS
+    global CIRCLE_DELAY, CIRCLE_MULTIPLIER, BH_MOUSE4_DELAY, SG_MOUSE5_DELAY, A_ITERATIONS, B_ITERATIONS, KEYPRESS_DETECT
 
     config = configparser.ConfigParser()
     config.read(config_name)
@@ -88,6 +90,7 @@ def LOAD_CONFIG(config_name: str) -> None:
     CIRCLE_MULTIPLIER = config.getint('Settings', 'CIRCLE_MULTIPLIER')
     BH_MOUSE4_DELAY = config.getfloat('Settings', 'BH_MOUSE4_DELAY')
     SG_MOUSE5_DELAY = config.getfloat('Settings', 'SG_MOUSE5_DELAY')
+    KEYPRESS_DETECT = config.getfloat('Settings', 'KEYPRESS_DETECT')
     
     A_ITERATIONS = 2 * CIRCLE_MULTIPLIER
     B_ITERATIONS = 1 * CIRCLE_MULTIPLIER
@@ -160,17 +163,20 @@ def MAIN() -> None:
                 MOVE_MOUSE((0, -1), (1, -1))
                 SLEEP(CIRCLE_DELAY)
         
-        if GetKeyState(0x06) < 0:
+        elif GetKeyState(0x06) < 0:
             press('spacebar')
             release('spacebar')
             SLEEP(BH_MOUSE4_DELAY)
         
-        if GetKeyState(0x05) < 0:
+        elif GetKeyState(0x05) < 0:
             press('spacebar')
             SLEEP(SG_MOUSE5_DELAY)
             press('ctrl')
             release('spacebar')
             release('ctrl')
+
+        else:
+            SLEEP(KEYPRESS_DETECT)
 
             
 if __name__ == "__main__":
