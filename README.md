@@ -1,14 +1,12 @@
-# WEEABOO v5.0.2
+# WEEABOO v5.0.3
+![](weeaboo.gif)
 
-### WEEABOO exploitation script for game
-\
-| LMB + RMB: spin curosr on tight circle\
-| MOUSE4: spam spacebar\
-| MOUSE5: spam spacebar + ctrl
+## WEEABOO exploitation script for game
+**LMB + RMB** - *Spin curosr on tight circle*\
+**MOUSE 4** - *Spam spacebar*\
+**MOUSE 5** - *Spam spacebar + ctrl*
 
 ## Installation and Requirements
-
-![](weeaboo.gif)
 
 ```
 1. Install Python 3.10+
@@ -25,5 +23,18 @@
 5. Run weeaboo.py
 ```
 
-## Changelog v5.0.2
-[+] Some fixes
+## About config
+<sub>*Delay for mouse cursor rotation. (0 = random between 0.0015 - 0.005)*</sub>\
+**circle_delay = 0**\
+<sub>*Circle spin radius multiplier*</sub>\
+**circle_multiplier = 2**\
+<sub>*Spam spacebar delay*</sub>\
+**bh_mouse4_delay = 0.01**\
+<sub>*Superglide delay, perfect value is:* **10 / YOUR_FPS_LOCK** *(0.004 ok for 240 fps lock)*</sub>\
+**sg_mouse5_delay = 0.004**\
+<sub>*Key press check time*</sub>\
+**keypress_detect = 0.1**
+
+
+## Changelog v5.0.3
+**[**+**]** *CPU load fix*
