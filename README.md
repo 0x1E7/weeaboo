@@ -9,7 +9,7 @@
 ## Installation and Requirements
 
 ```
-1. Install Python 3.10+
+1. Install Python 3.12+
 2. When installing add python to path!
 3. Clone/download this repo
 4. In repo folder run:
