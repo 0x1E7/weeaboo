@@ -1,29 +1,19 @@
 from typing import Final
-VERSION: Final = "5.0.3"
-# CPU load fix.
-
-from ctypes import windll, c_long, pointer, sizeof, c_ulong, c_uint, c_wchar, c_short, Structure
-from time import sleep
-from random import uniform, choice
-from os import system, remove
-from os.path import isfile
-import configparser
-
-try:
-    from keyboard import press, release
-    from win32api import mouse_event, GetKeyState
-except ModuleNotFoundError:
-    print("Module not found error, trying to install from pip...")
-    try:
-        system("python -m pip install -r requirements.txt")
-        system("cls")
-        _ = input("Press any key to close, this window...")
-    except:
-        system("cls")
-        _ = input("Can't install modules. Are you add python in path?\nTry in cmd:\n'pip install pywin32'\n'pip install keyboard'\n\nOr reinstall python and check mark 'add python to path'")
-    exit()
+VERSION: Final = "5.1.0"
 
 from PICTURES import *
+
+from win32api import GetKeyState, mouse_event
+from win32con import MOUSEEVENTF_MOVE
+from keyboard import press, release
+
+from ctypes import windll, c_long, pointer, sizeof, c_ulong, c_uint, c_wchar, c_short, Structure
+from random import choice
+from os import remove
+from os.path import isfile
+from math import pi, sin, cos
+from time import sleep
+import configparser
 
 GREETING =f"""{choice(PICTURES)}
 ┏━━━━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┓
@@ -70,11 +60,12 @@ def SETUP_CONFIG(config_name: str) -> None:
     """
     config = configparser.ConfigParser()
     config.add_section('Settings')
-    config.set('Settings', 'CIRCLE_DELAY', "0")
-    config.set('Settings', 'CIRCLE_MULTIPLIER', "2")
-    config.set('Settings', 'BH_MOUSE4_DELAY', "0.01")
+    config.set('Settings', 'CIRCLE_SPEED', "0.0001")
+    config.set('Settings', 'POINTS', "30")
+    config.set('Settings', 'CIRCLE_RADIUS', "1.3")
+    config.set('Settings', 'BH_MOUSE4_DELAY', "0.05")
     config.set('Settings', 'SG_MOUSE5_DELAY', "0.004")
-    config.set('Settings', 'KEYPRESS_DETECT', "0.1")
+    config.set('Settings', 'KEYPRESS_DETECT', "0.01")
     with open(config_name, 'w') as config_file:
         config.write(config_file)
 
@@ -82,18 +73,16 @@ def LOAD_CONFIG(config_name: str) -> None:
     """
     Load config file and set variables
     """
-    global CIRCLE_DELAY, CIRCLE_MULTIPLIER, BH_MOUSE4_DELAY, SG_MOUSE5_DELAY, A_ITERATIONS, B_ITERATIONS, KEYPRESS_DETECT
+    global CIRCLE_SPEED, POINTS, CIRCLE_RADIUS, BH_MOUSE4_DELAY, SG_MOUSE5_DELAY, A_ITERATIONS, B_ITERATIONS, KEYPRESS_DETECT
 
     config = configparser.ConfigParser()
     config.read(config_name)
-    CIRCLE_DELAY = config.getfloat('Settings', 'CIRCLE_DELAY')
-    CIRCLE_MULTIPLIER = config.getint('Settings', 'CIRCLE_MULTIPLIER')
+    CIRCLE_SPEED = config.getfloat('Settings', 'CIRCLE_SPEED')
+    POINTS = config.getint('Settings', 'POINTS')
+    CIRCLE_RADIUS = config.getfloat('Settings', 'CIRCLE_RADIUS')
     BH_MOUSE4_DELAY = config.getfloat('Settings', 'BH_MOUSE4_DELAY')
     SG_MOUSE5_DELAY = config.getfloat('Settings', 'SG_MOUSE5_DELAY')
     KEYPRESS_DETECT = config.getfloat('Settings', 'KEYPRESS_DETECT')
-    
-    A_ITERATIONS = 2 * CIRCLE_MULTIPLIER
-    B_ITERATIONS = 1 * CIRCLE_MULTIPLIER
 
 def CHECK_CONFIG(config_name: str) -> None:
     """
@@ -110,79 +99,47 @@ def CHECK_CONFIG(config_name: str) -> None:
         SETUP_CONFIG(config_name)
         LOAD_CONFIG(config_name)
 
-def SLEEP(timing: float | int) -> None:
+def MAIN(Radius: float | int, SleepTime: float | int) -> None:
     """
-    If the SLEEP function receives a value of 0,
-    then it uses a random time between 0.0015 and 0.005
+    Function Pre-calculates circle with math
+    Main logic when pressed MOUSE1 & MOUSE2, MOUSE4, MOUSE5
     """
-    if timing == 0:
-        sleep(uniform(0.0015, 0.005))
-    else:
-        sleep(timing)
+    CIRCLE_POINTS = []
+    STEPS = POINTS  # How many points in circle? This setups with config.ini
+    for i in range(STEPS):
+        Angle = (2 * pi * i) / STEPS  # Rads
+        dx = int(Radius * cos(Angle))  # X
+        dy = int(Radius * sin(Angle))  # Y
+        CIRCLE_POINTS.append((dx, dy))
+    
+    STEP = 0
 
-def MSEVENT(DirectionX: int, DirectionY: int) -> None:
-    """
-    Moves the mouse cursor a specified number of pixels
-    """
-    mouse_event(0x01, DirectionX, DirectionY)
-
-def MOVE_MOUSE(Vector_ONE: tuple, Vector_TWO: tuple) -> None:
-    """
-    Function draws a circle with moving the cursor
-    """
-    for i in range(A_ITERATIONS):
-        MSEVENT(Vector_ONE[0], Vector_ONE[1])
-    for i in range(B_ITERATIONS):
-        MSEVENT(Vector_TWO[0], Vector_TWO[1])
-
-def MAIN() -> None:
-    """
-    Main logic of programm
-    If mouse1 and mouse2 pressed:
-        MOVE_MOUSE
-        SLEEP
-        etc..
-
-    if mouse4 pressed:
-        spam spacebar
-
-    if mouse5 pressed:
-        spam spacebar + ctrl
-    """
     while True:
         if GetKeyState(0x01) < 0 and GetKeyState(0x02) < 0:
-                MOVE_MOUSE((1, 0), (1, 1))
-                SLEEP(CIRCLE_DELAY)
-                
-                MOVE_MOUSE((0, 1), (-1, 1))
-                SLEEP(CIRCLE_DELAY)
-                
-                MOVE_MOUSE((-1, 0), (-1, -1))
-                SLEEP(CIRCLE_DELAY)
-                    
-                MOVE_MOUSE((0, -1), (1, -1))
-                SLEEP(CIRCLE_DELAY)
-        
+            dx, dy = CIRCLE_POINTS[STEP]
+            mouse_event(MOUSEEVENTF_MOVE, dx, dy, 0, 0)
+            STEP = (STEP + 1) % STEPS
+
         elif GetKeyState(0x06) < 0:
             press('spacebar')
             release('spacebar')
-            SLEEP(BH_MOUSE4_DELAY)
-        
+            sleep(BH_MOUSE4_DELAY)
+
         elif GetKeyState(0x05) < 0:
             press('spacebar')
-            SLEEP(SG_MOUSE5_DELAY)
+            sleep(SG_MOUSE5_DELAY)
             press('ctrl')
             release('spacebar')
             release('ctrl')
 
         else:
-            SLEEP(KEYPRESS_DETECT)
+            STEP = 0
+            sleep(KEYPRESS_DETECT)
+        sleep(SleepTime)  # FIX CPU LOAD
 
-            
 if __name__ == "__main__":
-    #Entry point
     print(f"WEEABOO Jitter Exploitation v{VERSION}")
     CHECK_CONFIG("config.ini")
     SETUP_CMD_FONTS("NSimSun")
     print(GREETING)
-    MAIN()
+    MAIN(CIRCLE_RADIUS, CIRCLE_SPEED)
